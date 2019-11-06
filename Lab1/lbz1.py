@@ -1,3 +1,11 @@
+'''Якщо логічна функція при трьох нулях вертає 1, то коментуєм [0,0,0]
+Якщо програма не працює, виводить безкінечний цикл (або максимальну 
+кількість кроків), то панікуєм))) і міняєм коефіцієнт швидкості навчання,
+або коментуєм один із масивів в dataset'і (якась комбінація може бути 
+вірусною :0 )'''
+
+'''в таблиці в завданні вказана логічна ф-я і три коефіцієнти швидкості навчання
+записуєм іх і дивимось за скільки кроків виконається програма для кожного з них'''
 dataset = [[0,0,0],
 			[0,0,1],
 			[0,1,0],
@@ -11,23 +19,28 @@ weight = [0.57, 0.17, 0.73] #вагові коефіцієнти
 tresshold = .5 #порогове значення
 runCycle = True #Запуск циклу
 stepsCounter = 0 #Лічильник кроків
-n = .05 #Коефіцієнт швидкости навчаннє
+n = .05 #Коефіцієнт швидкості навчання
 
-logic_fun = lambda x1,x2,x3: (not(x1) or x2) and x3
-perceptron = lambda x,w: 1 if x[0]*w[0] + x[1]*w[1] + x[2]*w[2] > tresshold else 0
+logic_fun = lambda x: (not(x[0]) or x[1]) and x[2] #Логічна функція
+#Перцептрон (якщо сума >= порогове значення, повертає 1, інакше 0)
+perceptron = lambda x,w: 1 if x[0]*w[0] + x[1]*w[1] + x[2]*w[2] >= tresshold else 0
 
-while runCycle and stepsCounter < 100:
-	runCycle = False
-	for i in dataset:
-		teacher = logic_fun(i[0],i[1],i[2])
+while runCycle and stepsCounter < 1000:
+	runCycle = False #По дефолту false. Якщо умова не виконається, то true
+	for i in dataset: #і = кожен підмасив в масиві dataset (вхідні дані)
+		teacher = logic_fun(i)
 		student = perceptron(i,weight)
 		print("Вчитель: " + str(teacher) + "\tУчень: " + str(student))
+		'''Умова: якщо значення вчителя (логічної ф-ії) та учня (ф-ії Перцептрону)
+		не співпали, то оновлюєм вагові коефіцієнти і продовжуєм до тих пір, поки
+		значення цих ф-ій не співпадуть'''
 		if(teacher != student):
 			for j in range(3):
 				weight[j] += n*i[j]*(teacher - student)
 			runCycle = True
 
-	stepsCounter += 1
+	stepsCounter += 1 #Оновлюєм лічильник кроків
 
-	print("Крок: " + str(stepsCounter) + "\n")
-print("Кількість кроків: " + str(stepsCounter))
+	print("Крок: " + str(stepsCounter) + "\n") #Вивід поточного кроку
+print("Коефіцієнт швидкості навчання: " + str(n))
+print("Кількість кроків: " + str(stepsCounter)) #Вивід загальної к-сті кроків
