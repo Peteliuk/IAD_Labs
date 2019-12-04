@@ -24,9 +24,8 @@ class GeneticAlgorithm:
 
 	def mutation(self, pop):
 		print("Мутація")
-		for i_mut in range(self.n):
-			index = random.randint(0,(self.n-1))
-			pop[i_mut] = gen_ops.mutation(pop[i_mut],index)
+		index = random.randint(0,(self.n-1))
+		pop[index] = gen_ops.mutation(pop[index],index)
 
 	def run(self):
 		pop = [] #Populations (binary val of fenotype) list
@@ -44,7 +43,7 @@ class GeneticAlgorithm:
 			fen = r if r != 0 else random.randint(-50,50) #fenotype
 			fen_arr.append(fen)
 			gfv_arr.append(goal_fun(fen))
-			pop.append(gbc.dec_to_bin(fen))
+			pop.append(gbc.bin_to_gray(gbc.dec_to_bin(fen)))
 
 		best_fen = fen_arr[fen_arr.index(max(fen_arr))] #Best fenotype
 		print(fen_arr)
@@ -54,8 +53,7 @@ class GeneticAlgorithm:
 		print("\n")
 
 		live = 0
-		#/*************************** Вивід **********************************/
-
+		
 		while(run_cycle and steps_counter < self.steps):
 			steps_counter += 1
 
@@ -83,7 +81,7 @@ class GeneticAlgorithm:
 			gfv_arr = []
 
 			for j_push in range(self.n):
-				fen = gbc.bin_to_dec(pop[j_push])
+				fen = gbc.bin_to_dec(gbc.gray_to_bin(pop[j_push]))
 				fen_arr.append(fen)
 				gfv_arr.append(goal_fun(fen))
 
@@ -102,4 +100,4 @@ class GeneticAlgorithm:
 			print("\n")
 
 		print("Скільки поколінь вижив топ ("+str(best_fen)+"): " + str(live))
-		print("Кількість ітерацій: " + str(steps_counter))		
+		print("Кількість ітерацій: " + str(steps_counter))

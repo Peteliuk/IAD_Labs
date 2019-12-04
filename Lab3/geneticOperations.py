@@ -8,8 +8,9 @@ def crossing(parrent,partner,crossing_line):
 
 #Mutation function
 def mutation(arr,index):
-	arr[index] = "0" if arr[index] == "1" else "1"
-	return arr
+	arr2 = arr.copy()
+	arr2[index] = "0" if arr2[index] == "1" else "1"
+	return arr2
 
 #Rullet function
 def rullet(popArr, gfvArr, n):
